@@ -1,0 +1,7 @@
+#chr_event_details input[type="datetime-local"] {
+    max-width: 280px;
+}
+
+#chr_event_details input[type="text"] {
+    max-width: 360px;
+}
