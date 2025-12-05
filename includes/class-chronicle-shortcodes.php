@@ -79,9 +79,16 @@ class Shortcodes {
                 $start    = \get_post_meta( \get_the_ID(), 'chr_event_start', true );
                 $end      = \get_post_meta( \get_the_ID(), 'chr_event_end', true );
                 $location = \get_post_meta( \get_the_ID(), 'chr_event_location', true );
+                $all_day  = (bool) \get_post_meta( \get_the_ID(), 'chr_event_all_day', true );
 
-                $formatted_start = $start ? \date_i18n( \get_option( 'date_format' ) . ' ' . \get_option( 'time_format' ), strtotime( $start ) ) : '';
-                $formatted_end   = $end ? \date_i18n( \get_option( 'date_format' ) . ' ' . \get_option( 'time_format' ), strtotime( $end ) ) : '';
+                $date_format = \get_option( 'date_format' );
+                $time_format = \get_option( 'time_format' );
+
+                $start_pattern = $all_day ? $date_format : $date_format . ' ' . $time_format;
+                $end_pattern   = $all_day ? $date_format : $date_format . ' ' . $time_format;
+
+                $formatted_start = $start ? \date_i18n( $start_pattern, strtotime( $start ) ) : '';
+                $formatted_end   = $end ? \date_i18n( $end_pattern, strtotime( $end ) ) : '';
                 ?>
                 <li class="chronicle-event__item">
                     <h3 class="chronicle-event__title"><a href="<?php \the_permalink(); ?>"><?php \the_title(); ?></a></h3>
