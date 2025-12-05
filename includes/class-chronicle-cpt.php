@@ -27,7 +27,7 @@ class CPT {
                     'slug' => 'events',
                 ],
                 'show_in_rest' => true,
-                'supports'     => [ 'title', 'editor', 'excerpt', 'thumbnail' ],
+                'supports'     => [ 'title', 'editor', 'excerpt', 'thumbnail', 'revisions' ],
             ]
         );
     }

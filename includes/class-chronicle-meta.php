@@ -101,28 +101,32 @@ class Meta {
         $end_date = $end_timestamp ? \gmdate( 'Y-m-d', $end_timestamp ) : '';
         $end_time = ( $end_timestamp && ! $all_day ) ? \gmdate( 'H:i', $end_timestamp ) : '';
         ?>
-        <p>
-            <label for="chr_event_start_date"><strong><?php \esc_html_e( 'Start date', 'chronicle' ); ?></strong></label><br />
-            <input type="date" id="chr_event_start_date" name="chr_event_start_date" value="<?php echo \esc_attr( $start_date ); ?>" class="widefat" />
-        </p>
-        <p>
-            <label for="chr_event_end_date"><strong><?php \esc_html_e( 'End date', 'chronicle' ); ?></strong></label><br />
-            <input type="date" id="chr_event_end_date" name="chr_event_end_date" value="<?php echo \esc_attr( $end_date ); ?>" class="widefat" />
-        </p>
-        <p class="chr-event-time">
-            <label for="chr_event_start_time"><strong><?php \esc_html_e( 'Start time', 'chronicle' ); ?></strong></label><br />
-            <input type="time" id="chr_event_start_time" name="chr_event_start_time" value="<?php echo \esc_attr( $start_time ); ?>" step="300" class="widefat" />
-        </p>
-        <p class="chr-event-time">
-            <label for="chr_event_end_time"><strong><?php \esc_html_e( 'End time', 'chronicle' ); ?></strong></label><br />
-            <input type="time" id="chr_event_end_time" name="chr_event_end_time" value="<?php echo \esc_attr( $end_time ); ?>" step="300" class="widefat" />
-        </p>
-        <p>
+        <p class="chr-event-all-day">
             <label for="chr_event_all_day">
                 <input type="checkbox" id="chr_event_all_day" name="chr_event_all_day" value="1" <?php checked( $all_day ); ?> />
                 <?php \esc_html_e( 'All day event', 'chronicle' ); ?>
             </label>
         </p>
+        <div class="chr-event-datetime">
+            <div class="chr-event-field">
+                <label for="chr_event_start_date"><strong><?php \esc_html_e( 'Start date', 'chronicle' ); ?></strong></label><br />
+                <input type="date" id="chr_event_start_date" name="chr_event_start_date" value="<?php echo \esc_attr( $start_date ); ?>" class="widefat" />
+            </div>
+            <div class="chr-event-field chr-event-time">
+                <label for="chr_event_start_time"><strong><?php \esc_html_e( 'Start time', 'chronicle' ); ?></strong></label><br />
+                <input type="time" id="chr_event_start_time" name="chr_event_start_time" value="<?php echo \esc_attr( $start_time ); ?>" step="300" class="widefat" />
+            </div>
+        </div>
+        <div class="chr-event-datetime">
+            <div class="chr-event-field">
+                <label for="chr_event_end_date"><strong><?php \esc_html_e( 'End date', 'chronicle' ); ?></strong></label><br />
+                <input type="date" id="chr_event_end_date" name="chr_event_end_date" value="<?php echo \esc_attr( $end_date ); ?>" class="widefat" />
+            </div>
+            <div class="chr-event-field chr-event-time">
+                <label for="chr_event_end_time"><strong><?php \esc_html_e( 'End time', 'chronicle' ); ?></strong></label><br />
+                <input type="time" id="chr_event_end_time" name="chr_event_end_time" value="<?php echo \esc_attr( $end_time ); ?>" step="300" class="widefat" />
+            </div>
+        </div>
         <p>
             <label for="chr_event_location"><strong><?php \esc_html_e( 'Location', 'chronicle' ); ?></strong></label><br />
             <input type="text" id="chr_event_location" name="chr_event_location" value="<?php echo \esc_attr( $location ); ?>" class="widefat" />

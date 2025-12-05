@@ -5,3 +5,22 @@
 #chr_event_details input[type="text"] {
     max-width: 360px;
 }
+
+#chr_event_details .chr-event-all-day {
+    margin-bottom: 1em;
+}
+
+#chr_event_details .chr-event-datetime {
+    display: flex;
+    gap: 1em;
+    flex-wrap: wrap;
+    margin-bottom: 1em;
+}
+
+#chr_event_details .chr-event-field {
+    flex: 1 1 200px;
+}
+
+#chr_event_details .chr-event-field input {
+    max-width: 100%;
+}
