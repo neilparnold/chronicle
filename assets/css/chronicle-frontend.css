@@ -28,3 +28,19 @@
 .chronicle-event__location {
     font-weight: 600;
 }
+
+.chronicle-event__details {
+    margin: 24px 0 0;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #f8fafc;
+}
+
+.chronicle-event__details p {
+    margin: 0 0 12px;
+}
+
+.chronicle-event__details p:last-child {
+    margin-bottom: 0;
+}
