@@ -44,6 +44,22 @@ class Meta {
         \register_post_meta( 'chr_event', 'chr_event_start', $args );
         \register_post_meta( 'chr_event', 'chr_event_end', $args );
         \register_post_meta( 'chr_event', 'chr_event_location', $args );
+
+        \register_post_meta(
+            'chr_event',
+            'chr_event_all_day',
+            array(
+                'type'              => 'boolean',
+                'single'            => true,
+                'show_in_rest'      => true,
+                'auth_callback'     => function() {
+                    return \current_user_can( 'edit_posts' );
+                },
+                'sanitize_callback' => function( $value ) {
+                    return (bool) $value;
+                },
+            )
+        );
     }
 
     /**
@@ -74,14 +90,38 @@ class Meta {
         $start    = \get_post_meta( $post->ID, 'chr_event_start', true );
         $end      = \get_post_meta( $post->ID, 'chr_event_end', true );
         $location = \get_post_meta( $post->ID, 'chr_event_location', true );
+        $all_day  = (bool) \get_post_meta( $post->ID, 'chr_event_all_day', true );
+
+        $start_timestamp = $start ? \strtotime( $start ) : false;
+        $end_timestamp   = $end ? \strtotime( $end ) : false;
+
+        $start_date = $start_timestamp ? \gmdate( 'Y-m-d', $start_timestamp ) : '';
+        $start_time = ( $start_timestamp && ! $all_day ) ? \gmdate( 'H:i', $start_timestamp ) : '';
+
+        $end_date = $end_timestamp ? \gmdate( 'Y-m-d', $end_timestamp ) : '';
+        $end_time = ( $end_timestamp && ! $all_day ) ? \gmdate( 'H:i', $end_timestamp ) : '';
         ?>
         <p>
-            <label for="chr_event_start"><strong><?php \esc_html_e( 'Start date & time', 'chronicle' ); ?></strong></label><br />
-            <input type="datetime-local" id="chr_event_start" name="chr_event_start" value="<?php echo \esc_attr( $start ); ?>" class="widefat" />
+            <label for="chr_event_start_date"><strong><?php \esc_html_e( 'Start date', 'chronicle' ); ?></strong></label><br />
+            <input type="date" id="chr_event_start_date" name="chr_event_start_date" value="<?php echo \esc_attr( $start_date ); ?>" class="widefat" />
         </p>
         <p>
-            <label for="chr_event_end"><strong><?php \esc_html_e( 'End date & time', 'chronicle' ); ?></strong></label><br />
-            <input type="datetime-local" id="chr_event_end" name="chr_event_end" value="<?php echo \esc_attr( $end ); ?>" class="widefat" />
+            <label for="chr_event_end_date"><strong><?php \esc_html_e( 'End date', 'chronicle' ); ?></strong></label><br />
+            <input type="date" id="chr_event_end_date" name="chr_event_end_date" value="<?php echo \esc_attr( $end_date ); ?>" class="widefat" />
+        </p>
+        <p class="chr-event-time">
+            <label for="chr_event_start_time"><strong><?php \esc_html_e( 'Start time', 'chronicle' ); ?></strong></label><br />
+            <input type="time" id="chr_event_start_time" name="chr_event_start_time" value="<?php echo \esc_attr( $start_time ); ?>" step="300" class="widefat" />
+        </p>
+        <p class="chr-event-time">
+            <label for="chr_event_end_time"><strong><?php \esc_html_e( 'End time', 'chronicle' ); ?></strong></label><br />
+            <input type="time" id="chr_event_end_time" name="chr_event_end_time" value="<?php echo \esc_attr( $end_time ); ?>" step="300" class="widefat" />
+        </p>
+        <p>
+            <label for="chr_event_all_day">
+                <input type="checkbox" id="chr_event_all_day" name="chr_event_all_day" value="1" <?php checked( $all_day ); ?> />
+                <?php \esc_html_e( 'All day event', 'chronicle' ); ?>
+            </label>
         </p>
         <p>
             <label for="chr_event_location"><strong><?php \esc_html_e( 'Location', 'chronicle' ); ?></strong></label><br />
@@ -114,12 +154,27 @@ class Meta {
             return;
         }
 
-        $start    = isset( $_POST['chr_event_start'] ) ? \sanitize_text_field( \wp_unslash( $_POST['chr_event_start'] ) ) : '';
-        $end      = isset( $_POST['chr_event_end'] ) ? \sanitize_text_field( \wp_unslash( $_POST['chr_event_end'] ) ) : '';
-        $location = isset( $_POST['chr_event_location'] ) ? \sanitize_text_field( \wp_unslash( $_POST['chr_event_location'] ) ) : '';
+        $all_day       = isset( $_POST['chr_event_all_day'] );
+        $start_date    = isset( $_POST['chr_event_start_date'] ) ? \sanitize_text_field( \wp_unslash( $_POST['chr_event_start_date'] ) ) : '';
+        $start_time    = isset( $_POST['chr_event_start_time'] ) ? \sanitize_text_field( \wp_unslash( $_POST['chr_event_start_time'] ) ) : '';
+        $end_date      = isset( $_POST['chr_event_end_date'] ) ? \sanitize_text_field( \wp_unslash( $_POST['chr_event_end_date'] ) ) : '';
+        $end_time      = isset( $_POST['chr_event_end_time'] ) ? \sanitize_text_field( \wp_unslash( $_POST['chr_event_end_time'] ) ) : '';
+        $location      = isset( $_POST['chr_event_location'] ) ? \sanitize_text_field( \wp_unslash( $_POST['chr_event_location'] ) ) : '';
+
+        $start = $start_date ? $start_date : '';
+        $end   = $end_date ? $end_date : '';
+
+        if ( $start && ! $all_day && $start_time ) {
+            $start .= ' ' . $start_time;
+        }
+
+        if ( $end && ! $all_day && $end_time ) {
+            $end .= ' ' . $end_time;
+        }
 
         \update_post_meta( $post_id, 'chr_event_start', $start );
         \update_post_meta( $post_id, 'chr_event_end', $end );
         \update_post_meta( $post_id, 'chr_event_location', $location );
+        \update_post_meta( $post_id, 'chr_event_all_day', $all_day ? '1' : '0' );
     }
 }
