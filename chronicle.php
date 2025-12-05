@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Plugin Name: Chronicle by NEMC
@@ -27,11 +26,10 @@ require_once CHR_PLUGIN_DIR . 'includes/class-chronicle-meta.php';
 require_once CHR_PLUGIN_DIR . 'includes/class-chronicle-assets.php';
 require_once CHR_PLUGIN_DIR . 'includes/class-chronicle-shortcodes.php';
 
-
 /**
  * Bootstrap Chronicle.
  */
-function chr() {
-	return Chronicle\Main::instance();
+function chronicle() {
+    return Chronicle\Main::instance();
 }
-add_action( 'plugins_loaded', 'chr' );
+\add_action( 'plugins_loaded', 'chronicle' );
